@@ -1,5 +1,7 @@
 import Community from "../models/Community.js";
 
+
+
 // ✅ Create a new community
 export const createCommunity = async (req, res) => {
   try {

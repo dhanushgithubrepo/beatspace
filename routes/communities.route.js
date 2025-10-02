@@ -6,6 +6,7 @@ import {
   joinCommunity,
   leaveCommunity,
 } from "../controllers/communityController.js";
+import postRouter from "../routes/posts.route.js";
 
 const communityRouter = Router();
 
@@ -21,4 +22,6 @@ communityRouter.post("/:name/join", joinCommunity);
 // Leave a community by name
 communityRouter.post("/:name/leave", leaveCommunity);
 
+
+communityRouter.use("/:name/posts", postRouter);
 export default communityRouter;

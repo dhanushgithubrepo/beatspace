@@ -8,7 +8,8 @@ config({ path: path.resolve(process.cwd(), '.env') });
 export const {
   PORT = 3000,
   NODE_ENV = 'development',
-  DB_URI = '',
+  DB_URI = "mongodb+srv://dhanushaiml:KFpfOou3x8MEDE7y@cluster0.jvmj7.mongodb.net/beatspace?retryWrites=true&w=majority&appName=Cluster0",
+
   JWT_SECRET = '',
   JWT_EXPIRES_IN = '1d'
 } = process.env;

@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import { PORT, DB_URI } from "./config/env.js";
 import communityRouter from "./routes/communities.route.js";
+import authRouter from "./routes/auth.route.js";
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 app.use("/communities", communityRouter);
+app.use("/auth", authRouter);
 
 // MongoDB connection
 mongoose

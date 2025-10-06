@@ -1,6 +1,5 @@
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
-import { JWT_SECRET, JWT_EXPIRES_IN } from "../config/env.js";
 
 // Register
 export const register = async (req, res) => {
@@ -23,7 +22,12 @@ export const login = async (req, res) => {
     const isMatch = await user.comparePassword(password);
     if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
-    const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+    const token = jwt.sign(
+      { id: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN }
+    );
+
     res.json({ message: "Login successful", token });
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -32,5 +36,5 @@ export const login = async (req, res) => {
 
 // Get current user
 export const me = async (req, res) => {
-  res.json(req.user); // req.user will come from auth middleware
+  res.json(req.user); // req.user comes from auth middleware
 };

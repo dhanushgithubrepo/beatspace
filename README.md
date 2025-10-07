@@ -1,4 +1,3 @@
-Got it! Here's a **clean README draft** for your backend repo. It’s professional enough for GitHub, explains your future plans, and includes instructions to run locally or on Render. You can copy-paste and tweak if needed.
 
 ---
 

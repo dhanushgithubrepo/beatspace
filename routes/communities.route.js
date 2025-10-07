@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   createCommunity,
   listCommunities,
+  getCommunityByName,
   joinCommunity,
   leaveCommunity,
 } from "../controllers/communityController.js";
@@ -15,6 +16,9 @@ communityRouter.post("/", protect, createCommunity);
 
 // List all communities → public
 communityRouter.get("/", listCommunities);
+
+// ✅ Get a single community by name → public
+communityRouter.get("/:name", getCommunityByName);
 
 // Join a community by name → protected
 communityRouter.post("/:name/join", protect, joinCommunity);

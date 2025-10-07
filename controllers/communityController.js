@@ -1,17 +1,15 @@
 import Community from "../models/Community.js";
 
-// Create a new community
+// ✅ Create a new community
 export const createCommunity = async (req, res) => {
   try {
     const { name, description, creator } = req.body;
 
-    // Check if community already exists
     const existing = await Community.findOne({ name });
     if (existing) {
       return res.status(400).json({ message: "Community name already taken" });
     }
 
-    // Create community (creator auto added to members)
     const community = await Community.create({
       name,
       description,
@@ -28,7 +26,7 @@ export const createCommunity = async (req, res) => {
   }
 };
 
-// List all communities
+// ✅ List all communities
 export const listCommunities = async (req, res) => {
   try {
     const communities = await Community.find();
@@ -38,14 +36,29 @@ export const listCommunities = async (req, res) => {
   }
 };
 
-// Join a community
+// ✅ Get community by name (for viewing posts page)
+export const getCommunityByName = async (req, res) => {
+  try {
+    const community = await Community.findOne({ name: req.params.name });
+    if (!community)
+      return res.status(404).json({ message: "Community not found" });
+
+    res.json(community);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// ✅ Join a community
 export const joinCommunity = async (req, res) => {
   try {
-    const { user } = req.body; // userId or username
+    const { user } = req.body;
     const community = await Community.findOne({ name: req.params.name });
 
-    if (!community) return res.status(404).json({ error: "Community not found" });
-    if (community.members.includes(user)) return res.status(400).json({ message: "User already a member" });
+    if (!community)
+      return res.status(404).json({ error: "Community not found" });
+    if (community.members.includes(user))
+      return res.status(400).json({ message: "User already a member" });
 
     community.members.push(user);
     await community.save();
@@ -59,16 +72,18 @@ export const joinCommunity = async (req, res) => {
   }
 };
 
-// Leave a community
+// ✅ Leave a community
 export const leaveCommunity = async (req, res) => {
   try {
     const { user } = req.body;
     const community = await Community.findOne({ name: req.params.name });
 
-    if (!community) return res.status(404).json({ error: "Community not found" });
-    if (!community.members.includes(user)) return res.status(400).json({ message: "User is not a member" });
+    if (!community)
+      return res.status(404).json({ error: "Community not found" });
+    if (!community.members.includes(user))
+      return res.status(400).json({ message: "User is not a member" });
 
-    community.members = community.members.filter(u => u !== user);
+    community.members = community.members.filter((u) => u !== user);
     await community.save();
 
     res.status(200).json({

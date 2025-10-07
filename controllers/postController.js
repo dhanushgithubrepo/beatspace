@@ -1,22 +1,19 @@
 import Post from "../models/post.js";
 import Community from "../models/Community.js";
 
-// Create a post inside a community
+// ✅ Create a post inside a community
 export const createPost = async (req, res) => {
   try {
     const { title, content, author } = req.body;
     const { name } = req.params; // community name
 
-    // Find community
     const community = await Community.findOne({ name });
     if (!community) return res.status(404).json({ message: "Community not found" });
 
-    // Check if author is a member
     if (!community.members.includes(author)) {
       return res.status(403).json({ message: "You must join the community to post" });
     }
 
-    // Create post
     const post = await Post.create({
       community: community._id,
       author,
@@ -30,8 +27,8 @@ export const createPost = async (req, res) => {
   }
 };
 
-// List all posts in a community
-export const listPosts = async (req, res) => {
+// ✅ Get posts for a specific community
+export const getPostsByCommunity = async (req, res) => {
   try {
     const { name } = req.params;
     const community = await Community.findOne({ name });
@@ -40,11 +37,12 @@ export const listPosts = async (req, res) => {
     const posts = await Post.find({ community: community._id }).sort({ createdAt: -1 });
     res.json(posts);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(err);
+    res.status(500).json({ message: "Failed to fetch posts" });
   }
 };
 
-// Like/unlike a post
+// ✅ Like/unlike a post
 export const likePost = async (req, res) => {
   try {
     const { id } = req.params; // post ID

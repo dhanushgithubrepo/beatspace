@@ -2,7 +2,7 @@ import { Router } from "express";
 import { createPost, getPostsByCommunity, likePost } from "../controllers/postController.js";
 import { protect } from "../middleware/auth.js";
 
-const postRouter = Router({ mergeParams: true }); // ✅ mergeParams to access community name
+const postRouter = Router({ mergeParams: true }); // ✅ mergeParams to access :name from parent
 
 // ✅ Get posts for a specific community
 postRouter.get("/", getPostsByCommunity);

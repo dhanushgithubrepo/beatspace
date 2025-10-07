@@ -30,11 +30,13 @@ export const createPost = async (req, res) => {
 // ✅ Get posts for a specific community
 export const getPostsByCommunity = async (req, res) => {
   try {
-    const { name } = req.params;
+    const { name } = req.params; // community name from nested route
     const community = await Community.findOne({ name });
     if (!community) return res.status(404).json({ message: "Community not found" });
 
-    const posts = await Post.find({ community: community._id }).sort({ createdAt: -1 });
+    const posts = await Post.find({ community: community._id })
+      .sort({ createdAt: -1 }); // latest first
+
     res.json(posts);
   } catch (err) {
     console.error(err);

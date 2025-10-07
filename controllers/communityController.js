@@ -36,10 +36,14 @@ export const listCommunities = async (req, res) => {
   }
 };
 
-// ✅ Get community by name (for viewing posts page)
+// ✅ Get community by name (case-insensitive + slug-safe)
 export const getCommunityByName = async (req, res) => {
   try {
-    const community = await Community.findOne({ name: req.params.name });
+    const formattedName = req.params.name.replace(/-/g, " ");
+    const community = await Community.findOne({
+      name: new RegExp(`^${formattedName}$`, "i"), // case-insensitive match
+    });
+
     if (!community)
       return res.status(404).json({ message: "Community not found" });
 

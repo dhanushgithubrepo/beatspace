@@ -8,7 +8,6 @@ import {
 } from "../controllers/communityController.js";
 import postRouter from "../routes/posts.route.js";
 import { protect } from "../middleware/auth.js";
-import Community from "../models/Community.js"; // ✅ make sure this is imported
 
 const communityRouter = Router();
 
@@ -19,17 +18,7 @@ communityRouter.post("/", protect, createCommunity);
 communityRouter.get("/", listCommunities);
 
 // ✅ Get a single community by name → public
-communityRouter.get("/:name", async (req, res) => {
-  try {
-    const community = await Community.findOne({ name: req.params.name });
-    if (!community) {
-      return res.status(404).json({ message: "Community not found" });
-    }
-    res.json(community);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
+communityRouter.get("/:name", getCommunityByName);
 
 // Join a community by name → protected
 communityRouter.post("/:name/join", protect, joinCommunity);

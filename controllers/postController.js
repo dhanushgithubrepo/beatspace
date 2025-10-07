@@ -5,9 +5,14 @@ import Community from "../models/Community.js";
 export const createPost = async (req, res) => {
   try {
     const { title, content, author } = req.body;
-    const { name } = req.params; // community name
+    const { name } = req.params; // community name (slug)
 
-    const community = await Community.findOne({ name });
+    // Convert slug (lofi-beats → Lofi Beats)
+    const nameParam = name.replace(/-/g, " ");
+    const community = await Community.findOne({
+      name: new RegExp(`^${nameParam}$`, "i"),
+    });
+
     if (!community) return res.status(404).json({ message: "Community not found" });
 
     if (!community.members.includes(author)) {
@@ -30,12 +35,17 @@ export const createPost = async (req, res) => {
 // ✅ Get posts for a specific community
 export const getPostsByCommunity = async (req, res) => {
   try {
-    const { name } = req.params; // community name from nested route
-    const community = await Community.findOne({ name });
+    const { name } = req.params; // community name (slug)
+
+    // Convert slug (lofi-beats → Lofi Beats)
+    const nameParam = name.replace(/-/g, " ");
+    const community = await Community.findOne({
+      name: new RegExp(`^${nameParam}$`, "i"),
+    });
+
     if (!community) return res.status(404).json({ message: "Community not found" });
 
-    const posts = await Post.find({ community: community._id })
-      .sort({ createdAt: -1 }); // latest first
+    const posts = await Post.find({ community: community._id }).sort({ createdAt: -1 });
 
     res.json(posts);
   } catch (err) {
